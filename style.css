@@ -1,0 +1,448 @@
+:root {
+    --bg-dark: #050505;
+    --panel-bg: rgba(10, 10, 10, 0.95);
+    --accent: #ffffff;
+    --accent-hover: #e2e8f0;
+    --text-main: #ffffff;
+    --text-sub: #a1a1aa;
+    --border: rgba(255, 255, 255, 0.15);
+    --glass: rgba(15, 15, 15, 0.85);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow: hidden;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: #000;
+}
+
+/* Base Panel Style */
+.overlay-panel {
+    position: absolute;
+    z-index: 10;
+    background: var(--panel-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+/* Layout Positions */
+.bottom-left {
+    bottom: 20px;
+    left: 20px;
+    width: 380px;
+    max-height: 85vh;
+}
+
+/* Collapsed state for stats panel */
+.bottom-left.collapsed {
+    transform: translateY(calc(100% - 60px));
+}
+
+.bottom-right {
+    bottom: 20px;
+    right: 100px;
+    /* Moved further left to clear map controls */
+    width: auto;
+    padding: 24px;
+}
+
+.top-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 999;
+    /* Force it to the top */
+}
+
+/* Header */
+.overlay-header {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 10;
+    pointer-events: none;
+    max-width: 400px;
+}
+
+.header-content h1 {
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    font-size: 2.2rem;
+    color: var(--text-main);
+    text-transform: uppercase;
+    line-height: 0.9;
+}
+
+.header-content p {
+    color: var(--text-sub);
+    font-weight: 300;
+    margin-top: 4px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Control Panels (Top Right) */
+.control-panel {
+    background: var(--panel-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 4px;
+    width: 320px;
+    pointer-events: auto;
+}
+
+.control-panel h3 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-sub);
+    margin-bottom: 14px;
+    font-weight: 600;
+}
+
+/* MapLibRE Overrides */
+.maplibregl-ctrl-group {
+    background: var(--panel-bg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 2px !important;
+}
+
+.maplibregl-ctrl-group button {
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon,
+.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
+    filter: invert(1);
+}
+
+/* Popup SCL Style */
+.glass-popup .maplibregl-popup-content {
+    background: #0a0a0a !important;
+    color: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    backdrop-filter: blur(8px) !important;
+    border-radius: 2px !important;
+    padding: 16px !important;
+    box-shadow: var(--shadow);
+}
+
+.glass-popup .maplibregl-popup-tip {
+    border-top-color: #0a0a0a !important;
+}
+
+.popup-content h4 {
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+}
+
+.popup-content p {
+    font-size: 0.8rem;
+    margin: 4px 0;
+}
+
+/* Selection Buttons */
+.button-group,
+.toggle-group {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 2px;
+    gap: 2px;
+}
+
+button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-sub);
+    padding: 8px 12px;
+    border-radius: 2px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+button.active,
+button:hover {
+    background: white;
+    color: black;
+}
+
+.toggle-group {
+    flex-direction: column;
+}
+
+.toggle-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.toggle-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Stats Panel (Bottom Left) */
+.panel-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color 0.2s, background 0.2s;
+    width: auto;
+}
+
+.close-btn:hover {
+    color: white;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Rotate chevron when collapsed */
+.bottom-left.collapsed .close-btn {
+    transform: rotate(180deg);
+}
+
+.panel-content {
+    padding: 24px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+.metric-card .label {
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.metric-card .value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: white;
+}
+
+.chart-section h3 {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+}
+
+/* SHAP Chart */
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bar-label {
+    width: 140px;
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bar-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.bar-fill {
+    height: 100%;
+    background: white;
+}
+
+/* Standard Shade Legend (Viridis) */
+#shade-legend h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.shade-legend-container {
+    width: 280px;
+}
+
+.shade-bar {
+    height: 14px;
+    width: 100%;
+    background: linear-gradient(to right, #440154, #414487, #2a788e, #22a884, #7ad151, #fde725);
+    border-radius: 2px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.shade-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-sub);
+}
+
+/* Bivariate Legend Styling */
+#biv-legend {
+    padding: 30px;
+    /* Comfortable padding */
+}
+
+#biv-legend h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.legend-subtitle {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    margin-bottom: 18px;
+}
+
+.biv-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.biv-y-axis {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-sub);
+}
+
+.biv-matrix-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.biv-matrix {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 2px;
+}
+
+.biv-cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.biv-x-axis {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-sub);
+}
+
+/* Global Utilities */
+.hidden {
+    display: none !important;
+}
+
+.data-footer {
+    margin-top: 24px;
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    opacity: 0.4;
+}
+
+@media (max-width: 768px) {
+    .overlay-header {
+        top: 20px;
+        left: 20px;
+        width: calc(100% - 40px);
+    }
+
+    .overlay-panel,
+    .control-panel {
+        width: calc(100% - 40px);
+        left: 20px !important;
+        right: 20px !important;
+    }
+}

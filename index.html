@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Shade Inequality | Senseable City Lab Style</title>
+    <!-- MapLibre GL JS -->
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <!-- UI Overlay -->
+    <header class="overlay-header">
+        <div class="header-content">
+            <h1>NYC Shade Inequality</h1>
+            <p>Interactive mapping of urban shade disparity across New York City census tracts.</p>
+        </div>
+    </header>
+
+    <div class="overlay-controls top-right">
+        <div class="control-panel">
+            <h3>Location</h3>
+            <div class="button-group">
+                <button id="btn-nyc" class="active">NYC</button>
+                <button id="btn-brooklyn">Brooklyn</button>
+                <button id="btn-gowanus">Gowanus</button>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h3>Layers</h3>
+            <div class="toggle-group">
+                <label class="toggle-item">
+                    <input type="radio" name="layer" value="shade" checked>
+                    <span>Standard Shade Map</span>
+                </label>
+                <label class="toggle-item">
+                    <input type="radio" name="layer" value="bivariate">
+                    <span>Bivariate: Shade vs Wealth</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Panel -->
+    <div class="overlay-panel bottom-left" id="stats-panel">
+        <div class="panel-header">
+            <h2 id="location-title">New York City</h2>
+            <button class="close-btn"><i data-lucide="chevron-down"></i></button>
+        </div>
+        <div class="panel-content">
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <span class="label">Avg Cumulative Shade</span>
+                    <span class="value" id="val-shade">--%</span>
+                </div>
+                <div class="metric-card">
+                    <span class="label">Avg Per Capita Income</span>
+                    <span class="value" id="val-income">$0</span>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3>SHAP Feature Importance</h3>
+                <div id="shap-chart" class="bar-chart">
+                    <!-- Dynamic bars go here -->
+                </div>
+            </div>
+
+            <div class="data-footer">
+                <p>Data source: NYC OpenData, US Census Bureau</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Standard Shade Legend -->
+    <div id="shade-legend" class="overlay-panel bottom-right">
+        <h3>Cumulative Shade (%)</h3>
+        <div class="shade-legend-container">
+            <div class="shade-bar"></div>
+            <div class="shade-labels">
+                <span>0</span>
+                <span>10</span>
+                <span>20</span>
+                <span>30</span>
+                <span>40</span>
+                <span>50+</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bivariate Legend (Initially Hidden) -->
+    <div id="biv-legend" class="overlay-panel bottom-right hidden">
+        <h3>Bivariate Legend</h3>
+        <p class="legend-subtitle">Shade vs. Income</p>
+        <div class="biv-container">
+            <div class="biv-y-axis">Income →</div>
+            <div class="biv-matrix-wrapper">
+                <div class="biv-matrix">
+                    <!-- 3x3 Grid -->
+                    <div class="biv-cell" style="background: #3b4994;"></div>
+                    <div class="biv-cell" style="background: #8c62aa;"></div>
+                    <div class="biv-cell" style="background: #be64ac;"></div>
+
+                    <div class="biv-cell" style="background: #5698b9;"></div>
+                    <div class="biv-cell" style="background: #a5add3;"></div>
+                    <div class="biv-cell" style="background: #dfb0d6;"></div>
+
+                    <div class="biv-cell" style="background: #5ac8c8;"></div>
+                    <div class="biv-cell" style="background: #ace4e4;"></div>
+                    <div class="biv-cell" style="background: #e8e8e8;"></div>
+                </div>
+                <div class="biv-x-axis">Shade →</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
