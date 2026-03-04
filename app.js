@@ -1,5 +1,4 @@
 // NYC Shade Inequality - App Logic
-// Senseable City Lab Style
 
 let map;
 let statsData = {};
@@ -325,3 +324,4 @@ function renderShapChart(data) {
 
 // Start app
 init();
+
